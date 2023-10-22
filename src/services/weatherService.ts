@@ -10,6 +10,6 @@ export const getCities = async (value: string) => {
 };
 
 export const getCityData = async (key: string) => {
-  const response = await axiosServices.get(`currentconditions/v1/{key}}?apikey=${API_KEY}&q=${key}`);
+  const response = await axiosServices.get(`currentconditions/v1/${key}?apikey=${API_KEY}&q=${key}`);
   return response.data;
 };
