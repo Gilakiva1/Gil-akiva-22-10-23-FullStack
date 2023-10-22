@@ -7,8 +7,8 @@ export const Favorites: React.FC = () => {
   const { key } = useParams();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-
   const city = queryParams.get("city");
+
   return (
     <Stack direction={"column"}>
       {key && <Cards cityKey={key} city={city || ""} />}

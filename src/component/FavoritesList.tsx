@@ -1,9 +1,6 @@
 import { Button, Stack } from "@mui/material";
 import { FavoriteData } from "../pages/HomePage";
 
-interface FavoritesListProps {
-  favorites: FavoriteData[];
-}
 export const FavoritesList: React.FC<FavoritesListProps> = ({ favorites }) => {
   return (
     <Stack flex={1} sx={{ borderLeft: "1px solid black" }}>
@@ -17,3 +14,7 @@ export const FavoritesList: React.FC<FavoritesListProps> = ({ favorites }) => {
     </Stack>
   );
 };
+
+interface FavoritesListProps {
+  favorites: FavoriteData[];
+}

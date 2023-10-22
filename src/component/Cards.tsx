@@ -11,9 +11,11 @@ export const Cards: React.FC<CardsProps> = ({
   setFavorite,
 }) => {
   const [cityData, setCityData] = useState<CityData>();
-  const isFavorites = useMemo(() => {
-    return !!favorites?.find((item) => item.key === cityKey);
-  }, [cityKey, favorites]);
+
+  const isFavorites = useMemo(
+    () => !!favorites?.find((item) => item.key === cityKey),
+    [cityKey, favorites]
+  );
 
   useEffect(() => {
     getCityData(cityKey).then((data) => {
@@ -30,6 +32,7 @@ export const Cards: React.FC<CardsProps> = ({
       setFavorite((prevState) => [...prevState, { key: cityKey, city }]);
     }
   };
+
   return (
     <Stack
       sx={{

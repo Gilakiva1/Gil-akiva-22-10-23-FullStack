@@ -20,6 +20,7 @@ export const HomePage: React.FC = () => {
     const result: SearchResponse[] = await getCities(value);
     setCities(result);
   };
+
   const onSelectCity = async (
     _: React.SyntheticEvent<Element, Event>,
     option: SearchResponse | null
