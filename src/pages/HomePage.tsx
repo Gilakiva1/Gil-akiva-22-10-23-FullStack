@@ -29,7 +29,7 @@ export const HomePage: React.FC = () => {
   };
 
   return (
-    <Stack direction="row" sx={{ height: "100%", my: 3, mx: 1 }}>
+    <Stack direction="row" sx={{ height: "100%" }}>
       <Stack alignItems="center" flex={5}>
         <Autocomplete
           getOptionLabel={(option) => option.LocalizedName}
