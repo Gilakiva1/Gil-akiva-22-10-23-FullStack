@@ -1,8 +1,8 @@
-import { Box, Button, Stack } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { getCityData } from '../services/weatherService';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import { FavoriteData } from '../pages/HomePage';
+import { Box, Button, Stack } from "@mui/material";
+import React, { useEffect, useMemo, useState } from "react";
+import { getCityData } from "../services/weatherService";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { FavoriteData } from "../pages/HomePage";
 interface CardsProps {
   cityKey: string;
   city: string;
@@ -31,44 +31,50 @@ interface CityData {
     };
   };
 }
-export const Cards: React.FC<CardsProps> = ({ cityKey: key, city, favorites, setFavorite }) => {
+export const Cards: React.FC<CardsProps> = ({
+  cityKey,
+  city,
+  favorites,
+  setFavorite,
+}) => {
   const [cityData, setCityData] = useState<CityData>();
+  const isFavorites = useMemo(() => {
+    return !!favorites?.find((item) => item.key === cityKey);
+  }, [cityKey, favorites]);
 
   useEffect(() => {
-    getCityData(key).then(data => {
+    console.log({ cityKey });
+    getCityData(cityKey).then((data) => {
       setCityData(data);
     });
-  }, [key]);
+  }, [cityKey]);
 
   console.log({ cityData });
-
+  const toggleFavorites = () => {
+    if (!favorites || !setFavorite) return;
+    if (isFavorites) {
+      const currentFavorites = favorites.filter((item) => item.key !== cityKey);
+      setFavorite(currentFavorites);
+    } else {
+      setFavorite((prevState) => [...prevState, { key: cityKey, city }]);
+    }
+  };
   return (
     <Stack
       sx={{
-        borderRadius: '8px',
-        margin: '5px'
+        borderRadius: "8px",
+        margin: "5px",
       }}
     >
-      <Stack direction={'column'}>
+      <Stack direction={"column"}>
         <Box>{city}</Box>
         <Stack>
           <Box>{cityData?.Temperature.Metric.Value}</Box>
           <Box>{cityData?.WeatherText}</Box>
         </Stack>
       </Stack>
-      <Button
-        onClick={() => {
-          if (!favorites || !setFavorite) return;
-          const result = favorites.find(item => item.key === key);
-          if (result) {
-            const currentFavorites = favorites.filter(item => item.key !== key);
-            setFavorite(currentFavorites);
-          } else {
-            setFavorite(prevState => [...prevState, { key, city }]);
-          }
-        }}
-      >
-        <FavoriteIcon />
+      <Button onClick={toggleFavorites}>
+        <FavoriteIcon style={{ color: isFavorites ? "red" : "gray" }} />
       </Button>
     </Stack>
   );
