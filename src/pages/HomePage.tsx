@@ -1,8 +1,65 @@
-import { Stack, TextField } from "@mui/material";
+import { Autocomplete, Box, Stack, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { getCities } from "../services/weatherService";
 import { Cards } from "../component/Cards";
 import { FavoritesList } from "../component/FavoritesList";
+
+export const HomePage: React.FC = () => {
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [cities, setCities] = useState<SearchResponse[]>([]);
+  const [favorites, setFavorite] = useState<FavoriteData[]>([]);
+  const [selectedCity, setSelectedCity] = useState<SearchResponse>();
+
+  const handleSearchCities = async (
+    _: React.SyntheticEvent<Element, Event>,
+    value: string
+  ) => {
+    setSearchValue(value);
+    if (!value) return;
+
+    const result: SearchResponse[] = await getCities(value);
+    setCities(result);
+  };
+  const onSelectCity = async (
+    _: React.SyntheticEvent<Element, Event>,
+    option: SearchResponse | null
+  ) => {
+    setSelectedCity(option as unknown as SearchResponse);
+  };
+
+  return (
+    <Stack direction="row" sx={{ height: "100%", my: 3, mx: 1 }}>
+      <Stack alignItems="center" flex={5}>
+        <Autocomplete
+          getOptionLabel={(option) => option.LocalizedName}
+          disablePortal
+          options={cities}
+          inputValue={searchValue}
+          onInputChange={handleSearchCities}
+          onChange={onSelectCity}
+          renderOption={(props, option) => (
+            <Box component="li" {...props}>
+              {option.LocalizedName}
+            </Box>
+          )}
+          sx={{ width: 300 }}
+          renderInput={(params) => <TextField {...params} />}
+        />
+
+        {selectedCity && (
+          <Cards
+            cityKey={selectedCity.Key}
+            city={selectedCity.LocalizedName}
+            favorites={favorites}
+            setFavorite={setFavorite}
+          />
+        )}
+      </Stack>
+
+      {!!favorites.length && <FavoritesList favorites={favorites} />}
+    </Stack>
+  );
+};
 
 export interface FavoriteData {
   key: string;
@@ -16,43 +73,3 @@ interface SearchResponse {
   Rank: number;
   LocalizedName: string;
 }
-export const HomePage: React.FC = () => {
-  const [searchValue, setSearchValue] = useState<string>("");
-  const [cities, setCities] = useState<SearchResponse[]>([]);
-  const [favorites, setFavorite] = useState<FavoriteData[]>([]);
-
-  const handleSearchCities = async (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { value } = event.target;
-    setSearchValue(value);
-    if (!value) return;
-    const result: SearchResponse[] = await getCities(value);
-    setCities(result);
-  };
-
-  return (
-    <Stack direction="row" sx={{ height: "100%", my: 3, mx: 1 }}>
-      <Stack alignItems="center" flex={5}>
-        <TextField
-          value={searchValue}
-          onChange={handleSearchCities}
-          sx={{ width: 300 }}
-        />
-        {cities?.map((option, index) => {
-          return (
-            <Cards
-              key={index}
-              cityKey={(option as any).Key}
-              city={(option as any).localizedName}
-              favorites={favorites}
-              setFavorite={setFavorite}
-            />
-          );
-        })}
-      </Stack>
-
-      {!!favorites.length && <FavoritesList favorites={favorites} />}
-    </Stack>
-  );
-};
