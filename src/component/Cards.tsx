@@ -2,14 +2,11 @@ import { Box, Button, Stack } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { getCityData } from "../services/weatherService";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { FavoriteData } from "../pages/HomePage";
+import { useGlobalContext } from "../contexts/GlobalContext";
 
-export const Cards: React.FC<CardsProps> = ({
-  cityKey,
-  city,
-  favorites,
-  setFavorite,
-}) => {
+export const Cards: React.FC<CardsProps> = ({ cityKey, city }) => {
+  const { favorites, setFavorite } = useGlobalContext();
+
   const [cityData, setCityData] = useState<CityData>();
 
   const isFavorites = useMemo(
@@ -32,6 +29,7 @@ export const Cards: React.FC<CardsProps> = ({
       setFavorite((prevState) => [...prevState, { key: cityKey, city }]);
     }
   };
+  console.log({ isFavorites });
 
   return (
     <Stack
@@ -41,10 +39,10 @@ export const Cards: React.FC<CardsProps> = ({
         width: "250px",
       }}
     >
-      <Stack direction="row">
+      <Stack direction="row" gap={2} alignItems="center">
         <Stack direction={"column"} alignItems="flex-start">
           <Box component={"span"}>{city}</Box>
-          <Stack gap={"5px"} direction="row">
+          <Stack gap={1} direction="row">
             <Box component={"span"}>{cityData?.Temperature.Metric.Value}</Box>
             <Box component={"span"}>{cityData?.WeatherText}</Box>
           </Stack>
@@ -60,8 +58,6 @@ export const Cards: React.FC<CardsProps> = ({
 interface CardsProps {
   cityKey: string;
   city: string;
-  favorites?: FavoriteData[];
-  setFavorite?: React.Dispatch<React.SetStateAction<FavoriteData[]>>;
 }
 
 interface CityData {

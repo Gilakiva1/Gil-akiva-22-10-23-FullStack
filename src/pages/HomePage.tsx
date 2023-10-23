@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import { getCities } from "../services/weatherService";
 import { Cards } from "../component/Cards";
 import { FavoritesList } from "../component/FavoritesList";
+import { useGlobalContext } from "../contexts/GlobalContext";
 
 export const HomePage: React.FC = () => {
+  const { favorites } = useGlobalContext();
   const [searchValue, setSearchValue] = useState<string>("");
   const [cities, setCities] = useState<SearchResponse[]>([]);
-  const [favorites, setFavorite] = useState<FavoriteData[]>([]);
   const [selectedCity, setSelectedCity] = useState<SearchResponse>();
 
   const handleSearchCities = async (
@@ -48,24 +49,14 @@ export const HomePage: React.FC = () => {
         />
 
         {selectedCity && (
-          <Cards
-            cityKey={selectedCity.Key}
-            city={selectedCity.LocalizedName}
-            favorites={favorites}
-            setFavorite={setFavorite}
-          />
+          <Cards cityKey={selectedCity.Key} city={selectedCity.LocalizedName} />
         )}
       </Stack>
 
-      {!!favorites.length && <FavoritesList favorites={favorites} />}
+      {!!favorites.length && <FavoritesList />}
     </Stack>
   );
 };
-
-export interface FavoriteData {
-  key: string;
-  city: string;
-}
 
 interface SearchResponse {
   Version: number;

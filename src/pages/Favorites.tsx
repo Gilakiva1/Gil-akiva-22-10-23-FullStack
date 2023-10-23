@@ -10,7 +10,7 @@ export const Favorites: React.FC = () => {
   const city = queryParams.get("city");
 
   return (
-    <Stack direction={"column"}>
+    <Stack direction={"column"} alignItems="center" justifyContent="center">
       {key && <Cards cityKey={key} city={city || ""} />}
     </Stack>
   );
