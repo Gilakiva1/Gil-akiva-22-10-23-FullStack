@@ -19,6 +19,7 @@ export const HomePage: React.FC = () => {
     if (!value) return;
 
     const result: SearchResponse[] = await getCities(value);
+    console.log({ result });
     setCities(result);
   };
 

@@ -1,6 +1,6 @@
 import { Box, Button, Stack } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
-import { getCityData } from "../services/weatherService";
+import { addFavorite, getCityData } from "../services/weatherService";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useGlobalContext } from "../contexts/GlobalContext";
 
@@ -27,6 +27,7 @@ export const Cards: React.FC<CardsProps> = ({ cityKey, city }) => {
       setFavorite(currentFavorites);
     } else {
       setFavorite((prevState) => [...prevState, { key: cityKey, city }]);
+      addFavorite(cityKey, city);
     }
   };
   console.log({ isFavorites });

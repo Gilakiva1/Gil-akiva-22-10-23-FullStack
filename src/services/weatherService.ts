@@ -1,19 +1,20 @@
 import axios from "axios";
 
-const BASE_URL = "http://dataservice.accuweather.com/";
-const API_KEY = "0eyYFAi0pLvnSXVKmKcmD5yxyx0LHGKx";
-const axiosServices = axios.create({ baseURL: BASE_URL });
+const axiosServices = axios.create({ baseURL: process.env.REACT_APP_API_URL! });
 
 export const getCities = async (value: string) => {
-  const response = await axiosServices.get(
-    `locations/v1/cities/autocomplete?apikey=${API_KEY}&q=${value}`
-  );
+  const response = await axiosServices.get(`/?q=${value}`);
+  console.log({ response });
   return response.data;
 };
 
 export const getCityData = async (key: string) => {
-  const response = await axiosServices.get(
-    `currentconditions/v1/${key}?apikey=${API_KEY}&q=${key}`
-  );
+  const response = await axiosServices.get(`/cityData?key=${key}`);
+  console.log({ response });
+  return response.data;
+};
+export const addFavorite = async (key: string, name: string) => {
+  const response = await axiosServices.post(`/`, { key, name });
+  console.log({ response });
   return response.data;
 };

@@ -10,7 +10,7 @@ export const FavoritesList: React.FC = () => {
       <Stack direction={"column"}>
         {favorites.map((item, index) => (
           <Link
-            key={item.key + index}
+            key={`${item.key} + {index}`}
             to={`/${item.key}?city=${item.city}`}
             style={{ textAlign: "center" }}
           >
