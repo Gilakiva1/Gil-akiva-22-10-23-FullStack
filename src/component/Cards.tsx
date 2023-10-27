@@ -25,9 +25,9 @@ export const Cards: React.FC<CardsProps> = ({ cityKey, city }) => {
 
   useEffect(() => {
     getCityData(cityKey).then((data) => {
-      setCityData({ ...data[0], key: cityKey });
+      setCityData({ key: cityKey, city, ...data[0] });
     });
-  }, [cityKey]);
+  }, [city, cityKey]);
 
   const toggleFavorites = () => {
     if (!favorites || !setFavorite) return;
@@ -53,7 +53,7 @@ export const Cards: React.FC<CardsProps> = ({ cityKey, city }) => {
         <Stack direction={"column"} alignItems="flex-start">
           <Box component={"span"}>{city}</Box>
           <Stack gap={1} direction="row">
-            <Box component={"span"}>{cityData?.Temperature.Metric.Value}</Box>
+            <Box component={"span"}>{cityData?.Temperature?.Metric?.Value}</Box>
             <Box component={"span"}>{cityData?.WeatherText}</Box>
           </Stack>
         </Stack>
@@ -72,6 +72,7 @@ interface CardsProps {
 
 export interface CityData {
   key: string;
+  city: string;
   LocalObservationDateTime: string;
   EpochTime: number;
   WeatherText: string;
