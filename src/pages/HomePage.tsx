@@ -19,7 +19,6 @@ export const HomePage: React.FC = () => {
     if (!value) return;
 
     const result: SearchResponse[] = await getCities(value);
-    console.log({ result });
     setCities(result);
   };
 
@@ -32,7 +31,7 @@ export const HomePage: React.FC = () => {
 
   return (
     <Stack direction="row" sx={{ height: "100%" }}>
-      <Stack alignItems="center" flex={5}>
+      <Stack alignItems="center" flex={5} gap={3}>
         <Autocomplete
           getOptionLabel={(option) => option.LocalizedName}
           disablePortal

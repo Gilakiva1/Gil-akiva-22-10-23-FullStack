@@ -11,10 +11,10 @@ export const FavoritesList: React.FC = () => {
         {favorites.map((item, index) => (
           <Link
             key={`${item.key} + {index}`}
-            to={`/${item.key}?city=${item.city}`}
+            to={`/${item.key}?city=${item.name}`}
             style={{ textAlign: "center" }}
           >
-            <Button>{item.city}</Button>
+            <Button>{item.name}</Button>
           </Link>
         ))}
       </Stack>

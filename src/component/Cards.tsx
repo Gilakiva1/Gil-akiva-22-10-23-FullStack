@@ -1,6 +1,11 @@
 import { Box, Button, Stack } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
-import { addFavorite, getCityData } from "../services/weatherService";
+import {
+  addFavorite,
+  addWeather,
+  deleteFavorite,
+  getCityData,
+} from "../services/weatherService";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useGlobalContext } from "../contexts/GlobalContext";
 
@@ -13,10 +18,14 @@ export const Cards: React.FC<CardsProps> = ({ cityKey, city }) => {
     () => !!favorites?.find((item) => item.key === cityKey),
     [cityKey, favorites]
   );
+  useEffect(() => {
+    if (!cityData) return;
+    addWeather(cityData);
+  }, [cityData]);
 
   useEffect(() => {
     getCityData(cityKey).then((data) => {
-      setCityData(data[0]);
+      setCityData({ ...data[0], key: cityKey });
     });
   }, [cityKey]);
 
@@ -25,12 +34,12 @@ export const Cards: React.FC<CardsProps> = ({ cityKey, city }) => {
     if (isFavorites) {
       const currentFavorites = favorites.filter((item) => item.key !== cityKey);
       setFavorite(currentFavorites);
+      deleteFavorite(cityKey);
     } else {
-      setFavorite((prevState) => [...prevState, { key: cityKey, city }]);
+      setFavorite((prevState) => [...prevState, { key: cityKey, name: city }]);
       addFavorite(cityKey, city);
     }
   };
-  console.log({ isFavorites });
 
   return (
     <Stack
@@ -61,7 +70,8 @@ interface CardsProps {
   city: string;
 }
 
-interface CityData {
+export interface CityData {
+  key: string;
   LocalObservationDateTime: string;
   EpochTime: number;
   WeatherText: string;

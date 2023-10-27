@@ -1,4 +1,11 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { getFavorite } from "../services/weatherService";
 
 interface ContextValuesProps {
   setFavorite: React.Dispatch<React.SetStateAction<FavoriteData[]>>;
@@ -19,6 +26,14 @@ type GlobalProviderProps = {
 function GlobalProvider({ children }: GlobalProviderProps) {
   const [favorites, setFavorite] = useState<FavoriteData[]>([]);
 
+  useEffect(() => {
+    if (!favorites.length) {
+      getFavorite().then((result) => {
+        setFavorite(result);
+      });
+    }
+  }, [favorites]); // Include favorites as a dependency if needed
+
   return (
     <GlobalContext.Provider value={{ favorites, setFavorite }}>
       {children}
@@ -31,5 +46,5 @@ export { GlobalProvider, useGlobalContext };
 
 export interface FavoriteData {
   key: string;
-  city: string;
+  name: string;
 }
